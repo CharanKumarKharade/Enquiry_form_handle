@@ -17,13 +17,19 @@ function App() {
   };
   let handleSubmit = (event) => {
     let currentData = {
-      name: formData.uname,
-      email: formData.uemail,
-      phone: formData.uphone,
+      uname: formData.uname,
+      uemail: formData.uemail,
+      uphone: formData.uphone,
       index: formData.index,
     };
     let oldUserData = [...userData, currentData];
     setuserData(oldUserData);
+    setformData({
+      uname: "",
+      uemail: "",
+      uphone: "",
+      index: "",
+    });
     event.preventDefault();
   };
   return (
@@ -63,6 +69,41 @@ function App() {
 
           <button>{formData.index !== "" ? "Update" : "Save"}</button>
         </form>
+      </div>
+      <div>
+        <table>
+          <tr>
+            <th>Sl.no</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone Number</th>
+            <th>Action</th>
+          </tr>
+          {userData.length >= 1 ? (
+            userData.map((obj, i) => {
+              return (
+                <tr key={i}>
+                  <td>{i + 1}</td>
+                  <td>{obj.uname}</td>
+                  <td>{obj.uemail}</td>
+                  <td>{obj.uphone}</td>
+                  <td>
+                    <button>Edit</button>
+                    <button>Save</button>
+                  </td>
+                </tr>
+              );
+            })
+          ) : (
+            <tr>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+            </tr>
+          )}
+        </table>
       </div>
     </>
   );
