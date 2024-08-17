@@ -71,7 +71,7 @@ function App() {
         </form>
       </div>
       <div>
-        <table>
+        <table border="1">
           <tr>
             <th>Sl.no</th>
             <th>Name</th>
