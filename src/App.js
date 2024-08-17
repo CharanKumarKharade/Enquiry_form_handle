@@ -22,16 +22,29 @@ function App() {
       uphone: formData.uphone,
       index: formData.index,
     };
-    let oldUserData = [...userData, currentData];
-    setuserData(oldUserData);
-    setformData({
-      uname: "",
-      uemail: "",
-      uphone: "",
-      index: "",
-    });
+    let UpdatedData = userData.filter(
+      (v) => v.uemail === formData.uemail || v.uphone === formData.uphone
+    );
+    if (UpdatedData.length >= 1) {
+      alert("Email or Phone Already Exists");
+    } else {
+      let oldUserData = [...userData, currentData];
+      setuserData(oldUserData);
+      setformData({
+        uname: "",
+        uemail: "",
+        uphone: "",
+        index: "",
+      });
+    }
     event.preventDefault();
   };
+
+  let deleteData = (index) => {
+    let UpdatedData = userData.filter((v, i) => i !== index);
+    setuserData(UpdatedData);
+  };
+  console.log(deleteData);
   return (
     <>
       <div className="form-data">
@@ -88,8 +101,8 @@ function App() {
                   <td>{obj.uemail}</td>
                   <td>{obj.uphone}</td>
                   <td>
+                    <button onClick={() => deleteData(i)}>Delete</button>
                     <button>Edit</button>
-                    <button>Save</button>
                   </td>
                 </tr>
               );
