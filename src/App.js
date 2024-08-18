@@ -1,6 +1,13 @@
 import { useState } from "react";
 import "./App.css";
-
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "react-notifications/lib/notifications.css";
+import "react-notifications/lib/notifications.css";
+import {
+  NotificationContainer,
+  NotificationManager,
+} from "react-notifications";
 function App() {
   let [formData, setformData] = useState({
     uname: "",
@@ -22,20 +29,45 @@ function App() {
       uphone: formData.uphone,
       index: formData.index,
     };
-    let UpdatedData = userData.filter(
-      (v) => v.uemail === formData.uemail || v.uphone === formData.uphone
-    );
-    if (UpdatedData.length >= 1) {
-      alert("Email or Phone Already Exists");
+    if (formData.index === "") {
+      let UpdatedData = userData.filter(
+        (v) => v.uemail === formData.uemail || v.uphone === formData.uphone
+      );
+      if (UpdatedData.length >= 1) {
+        NotificationManager.info("Email or Phone Already Exists", "note");
+      } else {
+        let oldUserData = [...userData, currentData];
+        setuserData(oldUserData);
+        NotificationManager.success("Success", "Added data");
+        setformData({
+          uname: "",
+          uemail: "",
+          uphone: "",
+          index: "",
+        });
+      }
     } else {
-      let oldUserData = [...userData, currentData];
-      setuserData(oldUserData);
-      setformData({
-        uname: "",
-        uemail: "",
-        uphone: "",
-        index: "",
-      });
+      let editIndex = formData.index;
+      let oldData = userData;
+      let checkFilter = userData.filter(
+        (v, i) =>
+          (v.uemail === formData.uemail || v.uphone === formData.uphone) &&
+          i !== editIndex
+      );
+      if (checkFilter.length === 0) {
+        oldData[editIndex]["uname"] = formData.uname;
+        oldData[editIndex]["uemail"] = formData.uemail;
+        oldData[editIndex]["uphone"] = formData.uphone;
+        setuserData(oldData);
+        setformData({
+          uname: "",
+          uemail: "",
+          uphone: "",
+          index: "",
+        });
+      } else {
+        NotificationManager.info("Email or Phone Already Exists", "note");
+      }
     }
     event.preventDefault();
   };
@@ -43,10 +75,17 @@ function App() {
   let deleteData = (index) => {
     let UpdatedData = userData.filter((v, i) => i !== index);
     setuserData(UpdatedData);
+    toast.success("Deleted successfully");
   };
-  console.log(deleteData);
+  let editData = (index) => {
+    let editRow = userData.filter((v, i) => i === index)[0];
+    editRow["index"] = index;
+    setformData(editRow);
+  };
   return (
     <>
+      <ToastContainer />
+      <NotificationContainer />
       <div className="form-data">
         <h2>Enquiry Details</h2>
         <form onSubmit={handleSubmit}>
@@ -102,7 +141,7 @@ function App() {
                   <td>{obj.uphone}</td>
                   <td>
                     <button onClick={() => deleteData(i)}>Delete</button>
-                    <button>Edit</button>
+                    <button onClick={() => editData(i)}>Edit</button>
                   </td>
                 </tr>
               );
