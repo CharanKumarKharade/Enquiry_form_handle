@@ -1,6 +1,6 @@
 #Form handling using State Manegement in ReactJs
 #Enquiryform where data is displayed on the separate table
-
+The user cannot enter the same data with same gmail or phone number
 
 
 
